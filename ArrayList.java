@@ -2,33 +2,33 @@
 public class ArrayList<T> implements TDAList<T>{
     protected T[] list;
     protected int count;
-
-	public ArrayList(int n){
-        this.count = 0;
-        this.list = (T[]) new Object[n];
+// la cuneta inicia en 0 
+	public ArrayList(int n){// reciebe la cpacidad de n
+        this.count = 0;//la cuenta estara vacia
+        this.list = (T[]) new Object[n]; //Crea un Object[] de longitud n y lo convierte a T[].
     }
 	
-	// --- Nuevo método: añade un elemento al final ---
+	// ---  método: añade un elemento al final ---
     public void add(T x) {
-        if (this.nodeFull())
+        if (this.nodeFull()) //nodeFull, comprueba si count == list.length.
             throw new RuntimeException("List is full");
-        this.list[this.count++] = x;
+        this.list[this.count++] = x; //recorre la lista y se inserta el x
     }
 
-    /** Devuelve el elemento en la posición dada (0 ≤ index < capacidad). */
+    ////devuelve el elemento en la posición dada (0 ≤ index < capacidad).
     public T get(int index) {
-        if (index < 0 || index >= list.length) 
+        if (index < 0 || index >= list.length) //verificamos que el index este en0 y la longitud de la lista en -1
             throw new IndexOutOfBoundsException("Índice: " + index);
         return list[index];
     }
 
-    /** Asigna el elemento en la posición dada (0 ≤ index < capacidad). */
+    // aasigna el elemento en la posición dada (0 ≤ index < capacidad).
     public void set(int index, T x) {
         if (index < 0 || index >= list.length) 
             throw new IndexOutOfBoundsException("Índice: " + index);
         list[index] = x;
     }
-
+//estado de la lista
     public boolean nodeFull() {
         return (this.count == this.list.length);
     }
@@ -53,7 +53,7 @@ public class ArrayList<T> implements TDAList<T>{
         }
         return -1;
     }
-
+//buscamos
     public int search(String x) { return 0; }
 
     public void insertLast(T x) {
@@ -62,7 +62,7 @@ public class ArrayList<T> implements TDAList<T>{
         else
             this.list[this.count++] = x;
     }
-
+//insertamos en extremos
     public void insertFirst(T x) {
         if(this.nodeFull())
             System.out.println("List is Full");
@@ -74,7 +74,7 @@ public class ArrayList<T> implements TDAList<T>{
             this.count++;
         }
     }
-
+//eliminamos elemento x
     public void remove(T x) {
         int pos = this.search(x);
         if ( pos != 1 ){
@@ -85,7 +85,7 @@ public class ArrayList<T> implements TDAList<T>{
             System.out.println("Item not found");
         }
     }
-
+//imprimimiomos o represntamos en texto
     public String toString() {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < this.length(); i++)
