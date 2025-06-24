@@ -1,29 +1,31 @@
 
 public class BTree<E extends Comparable<E>> {
+	//construimos el arbol
 	private BNode<E> root;
-	private int orden;
+	private int orden;//orden
 
-	private boolean up;
-	private BNode<E> nDes;
+	private boolean up;//la mediana si sube
+	private BNode<E> nDes;//nuevo nodo derecho despues de slitear
 
 	public BTree(int orden) {
-		this.orden = orden;
-		this.root = null;
+		this.orden = orden;//orden, maximo numero de hijos
+		this.root = null;//esta vacio
 	}
-
+//vacio???
 	public boolean isEmpty() {
 		return this.root == null;
 	}
-
+//insertamos claves!!!!
 	public void insert(E cl) {
 		up = false;
 		E mediana;
-		BNode<E> pnew;
-		mediana = push(this.root, cl);
-
+		BNode<E> pnew;//(primer nodo)se usará únicamente si hay que crear una nueva raíz
+		mediana = push(this.root, cl);//push desciende por el árbol, inserta cl en la hoja adecuada, y va manejando splits de nodos llenos
+			//Si en algún momento un nodo se divide y su mediana sube
+		//creamos nuevo nodosi hace split
 		if (up) {
-			pnew = new BNode<E>(this.orden);
-			pnew.count = 1;
+			pnew = new BNode<E>(this.orden);//Se crea pnew, un nodo de orden orden, y se inserta en él la única clave mediana
+			pnew.count = 1;//contador en 1
 			pnew.keys.set(0, mediana);
 			pnew.childs.set(0, this.root);
 			pnew.childs.set(1, nDes);
@@ -31,27 +33,33 @@ public class BTree<E extends Comparable<E>> {
 		}
 	}
 
-	private E push(BNode<E> current, E cl) {
+	private E push(BNode<E> current, E cl) {//currete el nodo que quermos acomolar
 		int pos[] = new int[1];
+//un array de longitud uno, usado como contenedor para devolver por referencia el índice (hijo) correcto donde descender o la posición exacta de la clave si ya existe.		
 		E mediana;
+	//llegamos al final , hoja
 		if (current == null) {
 			up = true;
-			nDes = null;
+			nDes = null;//nDes = null porque aún no hay “medio nodo derecho” que adjuntar
 			return cl;
 		} else {
 			boolean fl;
-			fl = current.searchNode(cl, pos);
+			fl = current.searchNode(cl, pos);//invocamos en buscador
 
 			if (fl) {
 				System.out.println("Item duplicado\n");
-				up = false;
+				up = false;//se anula el split
 				return null;
 			}
 			mediana = push(current.childs.get(pos[0]), cl);
+			//llamada recursiva al hijo pos[0], pasando la misma clave cl.
+			//null, si no hubo promoción debajo,
+			//o la clave que debe insertarse o promoverse en este nivel.
 			if (up) {
-				if (current.nodeFull(this.orden - 1))
+				//Si está lleno , hay que hacer un split
+				if (current.nodeFull(this.orden - 1))// reubicar un split
 					mediana = dividedNode(current, mediana, pos[0]);
-				else {
+				else {//Si no está lleno,podemos simplemente insertar la clave en current
 					up = false;
 					putNode(current, mediana, nDes, pos[0]);
 				}
@@ -59,20 +67,23 @@ public class BTree<E extends Comparable<E>> {
 			return mediana;
 		}
 	}
-
+//insertamos un nueva clave en el arbol derechoooooooo
 	private void putNode(BNode<E> current, E cl, BNode<E> rd, int k) {
 		int i;
-
+//hijos de i: childs i (izqi) y i+1 (derech)
 		for (i = current.count - 1; i >= k; i--) {
-			current.keys.set(i + 1, current.keys.get(i));
-			current.childs.set(i + 2, current.childs.get(i + 1));
+			current.keys.set(i + 1, current.keys.get(i));//puntero al hijo derecho
+			current.childs.set(i + 2, current.childs.get(i + 1));//el hijo que estaba en i+1 pasa a i+2
 		}
-		current.keys.set(k, cl);
-		current.childs.set(k + 1, rd);
-		current.count++;
+		//aca ya deberiamos tener espacio en el inidice
+		current.keys.set(k, cl);//insertamos nueva lcave
+		current.childs.set(k + 1, rd); ////lo enlazamos
+		current.count++;//y aumentmos el contador cochino
 	}
-
+//dividimos nosodos para los splitsssss
+	
 	private E dividedNode(BNode<E> current, E cl, int k) {
+		//guardamos el nodo derecho en la posicion anterior
 		BNode<E> rd = nDes;
 		int i, posMdna;
 		posMdna = (k <= this.orden / 2) ? this.orden / 2 : this.orden / 2 + 1;
