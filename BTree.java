@@ -113,7 +113,7 @@ public class BTree<E extends Comparable<E>> {
         return searchRec(this.root, cl);
     }
 
-    private boolean searchRec(BNode<E> current, E cl) {
+    private boolean searchRec(BNode<E> current, E cl) {//BUSCMSK EN RECURSIVAMENETEE
         if (current == null) {//VACIO???
             return false;
         }
@@ -125,7 +125,7 @@ public class BTree<E extends Comparable<E>> {
         }
         return searchRec(current.childs.get(pos[0]), cl);
     }
-    
+  //////////////////////////////////////////////////////////////////////////////////  
     public E recover(E cl) {
         return recoverRec(root, cl);
     }
