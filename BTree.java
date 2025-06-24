@@ -107,16 +107,18 @@ public class BTree<E extends Comparable<E>> {
 		current.count--;
 		return median;
 	}
-	
+//EJERCICIO 1 
+	//BUSCAR
 	public boolean search(E cl) {
         return searchRec(this.root, cl);
     }
 
     private boolean searchRec(BNode<E> current, E cl) {
-        if (current == null) {
+        if (current == null) {//VACIO???
             return false;
         }
         int[] pos = new int[1];
+	    //Se crea un array pos de tamaño 1 para capturar el índice donde searchNode localiza la clave o, en su defecto, dónde debería ir.
         if (current.searchNode(cl, pos)) {
             System.out.println(cl + " se encuentra en el nodo " + current + " en la posición " + pos[0]);
             return true;
