@@ -117,7 +117,7 @@ public class BTree<E extends Comparable<E>> {
         if (current == null) {//VACIO???
             return false;
         }
-        int[] pos = new int[1];
+        int[] pos = new int[1];//NUESTRO GPS
 	    //Se crea un array pos de tamaño 1 para capturar el índice donde searchNode localiza la clave o, en su defecto, dónde debería ir.
         if (current.searchNode(cl, pos)) {
             System.out.println(cl + " se encuentra en el nodo " + current + " en la posición " + pos[0]);
@@ -138,21 +138,22 @@ public class BTree<E extends Comparable<E>> {
         }
         return recoverRec(node.childs.get(pos[0]), cl);
     }
-    
+ /////////////////////
+	//EJERCICIO 2
     public void remove(E cl) {
-        if (root == null) return;
-        root = removeRec(root, cl);
-        if (root != null && root.count == 0 && root.childs.get(0) != null) {
-            root = root.childs.get(0);
+        if (root == null) return;//VWRIFICADOR 
+        root = removeRec(root, cl);//RE INVOCCMOS REMOVER EN LA RAIZ
+        if (root != null && root.count == 0 && root.childs.get(0) != null) {//AJUTAMOS LA RAZI YA QUE NO TIENE CLAVE
+            root = root.childs.get(0);//HACEMOS QUE SI PRIMER HIJO LO REEMPLAZE
         }
     }
-    
+    //REMOVER RECOURSIVAMENRE
     private BNode<E> removeRec(BNode<E> node, E cl) {
         int[] pos = new int[1];
-        boolean found = node.searchNode(cl, pos);
-        if (found) {
-            if (node.childs.get(pos[0]) == null) {
-                removeFromNode(node, pos[0]);
+        boolean found = node.searchNode(cl, pos);//BUCAMOS PRIMERO EL NODO
+        if (found) {//si encontramos nuestro noditoo
+            if (node.childs.get(pos[0]) == null) {//el nodo  hoja no tiene hijos en esa posisio
+                removeFromNode(node, pos[0]);//lo decapitaaaa
             } else {
                 BNode<E> predNode = node.childs.get(pos[0]);
                 if (predNode.count > (orden-1)/2) {
