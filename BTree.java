@@ -179,12 +179,12 @@ public class BTree<E extends Comparable<E>> {
                     }
                 }
             }
-        } else {//sino, bajamos al hijo 
+        } else {//sino encuentra la key en el nodo baja a su hijitooou
             BNode<E> child = node.childs.get(pos[0]);
             if (child != null) {
                 node.childs.set(pos[0], removeRec(child, cl));
 		   //// tras eliminar en el subárbol, comprobamos underflow 
-                if (node.childs.get(pos[0]).count < (orden-1)/2) {
+                if (node.childs.get(pos[0]).count < (orden-1)/2) {//si esta desordenado
                     fixUnderflow(node, pos[0]);//arreglamos la mazamorra, redistribuye o fuciona el hijo con un hermano
                 }
             }
