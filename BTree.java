@@ -108,31 +108,33 @@ public class BTree<E extends Comparable<E>> {
 		return median;
 	}
 
-
-	public boolean search(E cl) {
-        return searchRec(this.root, cl);
-    }
 //////////////////////	//EJERCICIO 1 
 	//BUSCAR
-
 	
+	public boolean search(E cl) {
+	return searchRec(this.root, cl);
+    }
+
     private boolean searchRec(BNode<E> current, E cl) {//BUSCMSK EN RECURSIVAMENETEE
         if (current == null) {//VACIO???
             return false;
         }
         int[] pos = new int[1];//NUESTRO GPS
-	    //Se crea un array pos de tamaño 1 para capturar el índice donde searchNode localiza la clave o, en su defecto, dónde debería ir.
+	    //creamos un array pos de tamaño 1 para capturar el índice donde searchNode localiza la clave o, en su defecto, dónde debería ir.
         if (current.searchNode(cl, pos)) {
             System.out.println(cl + " se encuentra en el nodo " + current + " en la posición " + pos[0]);
             return true;
         }
         return searchRec(current.childs.get(pos[0]), cl);
+	    //Si no está en este nodo, descendemos recursivamente al hijo adecuado
     }
   //////////////////////////////////////////////////////////////////////////////////  
+
+//recuperamos instancias jejejej	, migajitas de pan
     public E recover(E cl) {
         return recoverRec(root, cl);
     }
-
+//uba busaqueda desde raiz
     private E recoverRec(BNode<E> node, E cl) {
         if (node == null) return null;
         int[] pos = new int[1];
@@ -141,8 +143,9 @@ public class BTree<E extends Comparable<E>> {
         }
         return recoverRec(node.childs.get(pos[0]), cl);
     }
- /////////////////////
+ ///////////////////// ELIMINADOR
 	//EJERCICIO 2
+	
     public void remove(E cl) {
         if (root == null) return;//VWRIFICADOR 
         root = removeRec(root, cl);//RE INVOCCMOS REMOVER EN LA RAIZ
@@ -155,38 +158,40 @@ public class BTree<E extends Comparable<E>> {
         int[] pos = new int[1];
         boolean found = node.searchNode(cl, pos);//BUCAMOS PRIMERO EL NODO
         if (found) {//si encontramos nuestro noditoo
-            if (node.childs.get(pos[0]) == null) {//el nodo  hoja no tiene hijos en esa posisio
+            if (node.childs.get(pos[0]) == null) {//si no hay mas subarbol abajo
                 removeFromNode(node, pos[0]);//lo decapitaaaa
             } else {
-                BNode<E> predNode = node.childs.get(pos[0]);
-                if (predNode.count > (orden-1)/2) {
-                    E pred = getMax(predNode);
-                    node.keys.set(pos[0], pred);
-                    node.childs.set(pos[0], removeRec(predNode, pred));
-                } else {
+                BNode<E> predNode = node.childs.get(pos[0]);//pasa a su hijo si no es nodo final
+                if (predNode.count > (orden-1)/2) {//si el hermano izquierdo tiene más de minKeys, puede prestarnos
+                    E pred = getMax(predNode);//extrae el maximo del predecesor
+                    node.keys.set(pos[0], pred);//lo reemplaza
+                    node.childs.set(pos[0], removeRec(predNode, pred));//eliminamos recursibvamente
+                } else {//si el hermano izq no iene sufi probamos con el derecho
                     BNode<E> succNode = node.childs.get(pos[0]+1);
                     if (succNode.count > (orden-1)/2) {
-                        E succ = getMin(succNode);
+                        E succ = getMin(succNode);//escoge al sucesir
                         node.keys.set(pos[0], succ);
                         node.childs.set(pos[0]+1, removeRec(succNode, succ));
-                    } else {
-                        mergeChildren(node, pos[0]);
+                    } else {//sino funca ni uno ni otro, fucionmos
+                        mergeChildren(node, pos[0]);//ficons de pred y succ
                         node.childs.set(pos[0], removeRec(node.childs.get(pos[0]), cl));
+			    //eliminamos el cl en el nodo fucnionado
                     }
                 }
             }
-        } else {
+        } else {//sino, bajamos al hijo 
             BNode<E> child = node.childs.get(pos[0]);
             if (child != null) {
                 node.childs.set(pos[0], removeRec(child, cl));
+		   //// tras eliminar en el subárbol, comprobamos underflow 
                 if (node.childs.get(pos[0]).count < (orden-1)/2) {
-                    fixUnderflow(node, pos[0]);
+                    fixUnderflow(node, pos[0]);//arreglamos la mazamorra, redistribuye o fuciona el hijo con un hermano
                 }
             }
         }
         return node;
     }
-    
+///////////////////////////////////////////////////////////////////////////////    
     private void removeFromNode(BNode<E> node, int i) {
         for (int j = i; j < node.count-1; j++) {
             node.keys.set(j, node.keys.get(j+1));
