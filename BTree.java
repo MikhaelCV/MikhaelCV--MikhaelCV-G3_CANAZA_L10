@@ -149,8 +149,8 @@ public class BTree<E extends Comparable<E>> {
     public void remove(E cl) {
         if (root == null) return;//VWRIFICADOR 
         root = removeRec(root, cl);//RE INVOCCMOS REMOVER EN LA RAIZ
-        if (root != null && root.count == 0 && root.childs.get(0) != null) {//AJUTAMOS LA RAZI YA QUE NO TIENE CLAVE
-            root = root.childs.get(0);//HACEMOS QUE SI PRIMER HIJO LO REEMPLAZE
+        if (root != null && root.count == 0 && root.childs.get(0) != null) {//AJUTAMOS si tras eliminar la raíz quedó sin claves
+            root = root.childs.get(0);//El primer hijo pasa a ser la nueva raíz del árbol.
         }
     }
     //REMOVER RECOURSIVAMENRE
