@@ -107,12 +107,15 @@ public class BTree<E extends Comparable<E>> {
 		current.count--;
 		return median;
 	}
-//EJERCICIO 1 
-	//BUSCAR
+
+
 	public boolean search(E cl) {
         return searchRec(this.root, cl);
     }
+//////////////////////	//EJERCICIO 1 
+	//BUSCAR
 
+	
     private boolean searchRec(BNode<E> current, E cl) {//BUSCMSK EN RECURSIVAMENETEE
         if (current == null) {//VACIO???
             return false;
